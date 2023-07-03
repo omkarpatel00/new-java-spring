@@ -31,6 +31,13 @@
             <url>https://cloud4c-490167669940.d.codeartifact.ap-southeast-1.amazonaws.com/maven/Blue-test/</url>
         </repository>
     </distributionManagement>
+<repositories>
+  <repository>
+    <id>codeartifact</id>
+    <url>https://cloud4c.d.codeartifact.ap-southeast-1.amazonaws.com/maven/Blue-test/</url>
+  </repository>
+</repositories>
+
 
     <dependencies>
         <dependency>
