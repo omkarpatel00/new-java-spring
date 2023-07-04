@@ -15,6 +15,12 @@ pipeline {
                 checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'op-github', url: 'https://github.com/omkarpatel00/new-java-spring.git']]])
             }
         }
+        stage ('mvn') {
+            steps {
+                   sh 'mvn clean install'
+                   }
+        }
+
         stage('CompileandRunSonarAnalysis') {
             steps {	
 		sh 'mvn clean verify sonar:sonar -Dsonar.projectKey=new-java-spring -Dsonar.organization=new-java-spring -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=9f219a9085660de97bf778f66fbcaac0a10ca8f7'
