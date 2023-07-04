@@ -20,6 +20,11 @@ pipeline {
 		sh 'mvn clean verify sonar:sonar -Dsonar.projectKey=new-java-spring -Dsonar.organization=new-java-spring -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=9f219a9085660de97bf778f66fbcaac0a10ca8f7'
 			}
         }
+        steps {		
+				withCredentials([string(credentialsId: 'SNYK_TOKEN', variable: 'SNYK_TOKEN')]) {
+					sh 'mvn snyk:test -fn'
+				}
+			}
         stage('Build an image') {
             steps {
                 sh 'mvn clean install'
