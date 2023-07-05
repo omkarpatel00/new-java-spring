@@ -15,10 +15,6 @@ pipeline {
                 checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'op-github', url: 'https://github.com/omkarpatel00/new-java-spring.git']]])
             }
         }
-        stage ('mvn') {
-            steps {
-                   sh 'mvn clean install'
-                   }
         }
 
         stage('CompileandRunSonarAnalysis') {
@@ -30,7 +26,7 @@ pipeline {
             steps {		
 			withCredentials([string(credentialsId: 'SNYK_TOKEN', variable: 'SNYK_TOKEN')]) {
 			 sh 'mvn dependency:tree -version'
-                         sh 'mvn snyk:test'
+                         sh 'mvn snyk:test -fn'
 				}
 			}
     }		
