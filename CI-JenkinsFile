@@ -1,33 +1,25 @@
 pipeline {
     agent any
-  
-    environment {
-      APP_NAME = 'my-java-app'
-      ECR_REPO = 'my-ecr-repo'
-      ECR_REGION = 'ap-southeast-1'
-      APP = 'java-ECS'
-      
-      IMAGE_TAG='java-${BUILD_NUMBER}'
-    }
     stages {
         stage('Checkout') {
             steps {
                 checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'op-github', url: 'https://github.com/omkarpatel00/new-java-spring.git']]])
             }
         }
+
+        stage('Compile and Run Sonar Analysis') {
+            steps {
+                sh 'mvn clean verify sonar:sonar -Dsonar.projectKey=new-java-spring -Dsonar.organization=new-java-spring -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=9f219a9085660de97bf778f66fbcaac0a10ca8f7'
+            }
         }
 
-        stage('CompileandRunSonarAnalysis') {
-            steps {	
-		sh 'mvn clean verify sonar:sonar -Dsonar.projectKey=new-java-spring -Dsonar.organization=new-java-spring -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=9f219a9085660de97bf778f66fbcaac0a10ca8f7'
-			}
+        stage('Run SCA Analysis Using Snyk') {
+            steps {
+                withCredentials([string(credentialsId: 'SNYK_TOKEN', variable: 'SNYK_TOKEN')]) {
+                    sh 'mvn dependency:tree -version'
+                    sh 'mvn snyk:test -fn'
+                }
+            }
         }
-        stage('RunSCAAnalysisUsingSnyk') {
-            steps {		
-			withCredentials([string(credentialsId: 'SNYK_TOKEN', variable: 'SNYK_TOKEN')]) {
-			 sh 'mvn dependency:tree -version'
-                         sh 'mvn snyk:test -fn'
-				}
-			}
-    }		
+    }
 }
