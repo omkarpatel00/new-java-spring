@@ -64,15 +64,15 @@ pipeline {
 	   
 	stage('RunDASTUsingZAP') {
            steps {
-              withKubeConfig([credentialsId: 'kubelogin']) {
-              sh 'chmod +x zap.sh'
-              sh './zap.sh -cmd -quickurl http://$(kubectl get services/asgbuggy --namespace=devsecops -o json | jq -r ".status.loadBalancer.ingress[] | .hostname") -quickprogress -quickout ${WORKSPACE}/zap_report.html'
+           withKubeConfig([credentialsId: 'kubelogin']) {
+            sh 'chmod +x zap.sh'
+            sh './zap.sh -cmd -quickurl http://$(kubectl get services/asgbuggy --namespace=devsecops -o json | jq -r ".status.loadBalancer.ingress[] | .hostname") -quickprogress -quickout ${WORKSPACE}/zap_report.html'
             
             // Verify the presence of the zap_report.html file
-              sh 'ls ${WORKSPACE}/zap_report.html'
-
+            sh 'ls ${WORKSPACE}/zap_report.html'
+            
             // Archive the zap_report.html file
-              archiveArtifacts artifacts: 'zap_report.html'
+            archiveArtifacts artifacts: '${WORKSPACE}/zap_report.html'
         }
     }
 }
