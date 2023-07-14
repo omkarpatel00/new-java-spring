@@ -76,19 +76,21 @@ pipeline {
         }
 
           stage('Run DAST Using ZAP') {
+   stage('Run DAST Using ZAP') {
     steps {
         withKubeConfig([credentialsId: 'kubelogin']) {
             sh 'chmod +x zap.sh'
             sh "export ZAP_REPORT=${ZAP_REPORT} && ./zap.sh -cmd -quickurl http://$(kubectl get services/asgbuggy --namespace=devsecops -o json | jq -r '.status.loadBalancer.ingress[0].hostname') -quickprogress -quickout ${ZAP_REPORT}"
 
             // Verify the presence of the zap_report.html file
-            sh 'ls ${ZAP_REPORT}'
+            sh "ls ${ZAP_REPORT}"
 
             // Archive the zap_report.html file
             archiveArtifacts artifacts: "${ZAP_REPORT}"
         }
     }
 }
+
 
     }
 }
