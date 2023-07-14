@@ -33,7 +33,7 @@ pipeline {
             }
         }
 
-        stage('RunSCAAnalysisUsingSnyk') {
+        stage('Run SCA Analysis Using Snyk') {
             steps {
                 withCredentials([string(credentialsId: 'SNYK_TOKEN', variable: 'SNYK_TOKEN')]) {
                     sh 'chmod +x mvnw' // Ensure the script has executable permissions
@@ -79,13 +79,14 @@ pipeline {
             steps {
                 withKubeConfig([credentialsId: 'kubelogin']) {
                     sh 'chmod +x zap.sh'
-                    sh './zap.sh -cmd -quickurl http://$(kubectl get services/asgbuggy --namespace=devsecops -o json | jq -r ".status.loadBalancer.ingress[] | .hostname") -quickprogress -quickout ${WORKSPACE}/zap_report.html'
+                    sh 'export ZAP_REPORT=${WORKSPACE}/zap_report.html'
+                    sh './zap.sh -cmd -quickurl http://$(kubectl get services/asgbuggy --namespace=devsecops -o json | jq -r ".status.loadBalancer.ingress[] | .hostname") -quickprogress -quickout ${ZAP_REPORT}'
 
                     // Verify the presence of the zap_report.html file
-                    sh 'ls ${WORKSPACE}/zap_report.html'
+                    sh 'ls ${ZAP_REPORT}'
 
                     // Archive the zap_report.html file
-                    archiveArtifacts artifacts: 'zap_report.html'
+                    archiveArtifacts artifacts: '${ZAP_REPORT}'
                 }
             }
         }
