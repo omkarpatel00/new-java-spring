@@ -35,7 +35,7 @@ pipeline {
     }
         stage('Build an image') {
             steps {
-                sh "docker build -t my-ecr-repo-op-${app} ."
+                sh "docker build ("asg")."
             }
         }
         stage('Push to ECR') {
@@ -44,8 +44,8 @@ pipeline {
                     sh 'aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY'
                     sh 'aws configure set default.region $AWS_REGION'
                     sh "aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin 490167669940.dkr.ecr.ap-southeast-1.amazonaws.com"
-                    sh "docker tag my-ecr-repo-op-${app}:latest 490167669940.dkr.ecr.ap-southeast-1.amazonaws.com/my-ecr-repo-op:${app}-${BUILD_NUMBER}"
-                    sh "docker push 490167669940.dkr.ecr.ap-southeast-1.amazonaws.com/my-ecr-repo-op:${app}-${BUILD_NUMBER}"
+                    sh "https://490167669940.dkr.ecr.ap-southeast-1.amazonaws.com"
+                    sh "docker push 490167669940.dkr.ecr.ap-southeast-1.amazonaws.com"
                 }
            }
          stage('Kubernetes Deployment of ASG Bugg Web Application') {
