@@ -17,7 +17,8 @@ spec:
         image: 490167669940.dkr.ecr.ap-southeast-1.amazonaws.com/my-ecr-repo-op:secops-137
         imagePullPolicy: Always
         ports:
-        - containerPort: 8080
+          - name: http
+            containerPort: 8080 
 # service type loadbalancer       
 ---
 apiVersion: v1
@@ -28,10 +29,9 @@ metadata:
     k8s-app: asgbuggy
   name: asgbuggy
 spec:
-  ports:
+ ports:                      # Forward incoming connections on port 8080 to the target port 8080
   - name: http
-    port: 80
-    protocol: TCP
+    port: 8080
     targetPort: 8080
   type: LoadBalancer
   selector:
