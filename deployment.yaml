@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: asgbuggy
-        image: 490167669940.dkr.ecr.ap-southeast-1.amazonaws.com/my-ecr-repo-op:secops-137
+        image: 490167669940.dkr.ecr.ap-southeast-1.amazonaws.com/my-ecr-repo-op:build-22
         imagePullPolicy: Always
         ports:
           - name: http
