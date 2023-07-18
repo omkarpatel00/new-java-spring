@@ -30,9 +30,9 @@ metadata:
   name: asgbuggy
 spec:
  ports:                      # Forward incoming connections on port 8080 to the target port 8080
-  - name: http
-    port: 8080
-    targetPort: 8080
-  type: LoadBalancer
-  selector:
-    app: asgbuggy
+   - name: http
+     port: 8080
+     targetPort: 8080
+ type: LoadBalancer
+ selector:
+   app: asgbuggy
